@@ -1,0 +1,20 @@
+[
+    {
+        "username": "moi",
+        "password": "$2b$10$iXPuUip4JTXNEEJNfThvmOVuUuzSAFld38QJiuXzRErArHxVj0I3y",
+        "id": "416a5c0a-82eb-4ecd-b839-2260dbe9b9ca",
+        "books": []
+    },
+    {
+        "username": "jaki",
+        "password": "$2b$10$4nnFZzpnIB/2q4Zrr2xupe51y2MS1PK5kGpG9.S7DZ1FCMweb48CK",
+        "id": "a50335b8-c9e0-49b9-a4f3-a273f19c4943",
+        "books": []
+    },
+    {
+        "username": "jaki",
+        "password": "$2b$04$tuUuz8dzLmDH5Enps4hGHeBMKI5ol77pbA7440yPYVFCZ6wZNnvAq",
+        "id": "431aa0af-f756-4afc-b7a8-5394895e261b",
+        "books": []
+    }
+]
