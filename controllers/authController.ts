@@ -39,8 +39,8 @@ export async function login(req: Request,res: Response) {
             username: req.body.username,
             password: req.body.password
         };
-        const userID = authenticateUser(user.username, user.password);
-        res.status(200).json({userId: userID});
+        const userID = await authenticateUser(user.username, user.password);
+        res.status(200).json({userId: userID.toString()});
     }
     catch (error: any) {
         if (error.message === "Invalid username or password.") {

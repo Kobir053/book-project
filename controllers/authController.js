@@ -44,8 +44,8 @@ export function login(req, res) {
                 username: req.body.username,
                 password: req.body.password
             };
-            const userID = authenticateUser(user.username, user.password);
-            res.status(200).json({ userId: userID });
+            const userID = yield authenticateUser(user.username, user.password);
+            res.status(200).json({ userId: userID.toString() });
         }
         catch (error) {
             if (error.message === "Invalid username or password.") {
