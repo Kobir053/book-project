@@ -1,6 +1,6 @@
 import { Book, User } from "../models/types";
 import { v4 as uuidv4 } from "uuid";
-import { readFromJsonFile, writeUserToJsonFile } from "../DAL/jsonUsers.js"
+import { readFromJsonFile, updateUserInJsonFile, writeUserToJsonFile } from "../DAL/jsonUsers.js"
 import bcrypt from "bcrypt";
 import { tryToGetBook } from "../otherAPI/requestForOtherAPI.js";
 
@@ -55,10 +55,6 @@ export async function ifUserIdExists (userId: string) : Promise<number> {
   }
 
 export async function createNewBook(title: string, userId: string) {
-    // the details should be in the body not in the query...
-    // maybe middleware for that..
-    // maybe the service should get the whole book details and here to create it..
-
     try{
 
         const userIndex: number = await ifUserIdExists(userId);
@@ -78,10 +74,11 @@ export async function createNewBook(title: string, userId: string) {
         if(!myUsers){
             throw new Error("there isn't any users at all");
         }
-        console.log(`userIndex = ${userIndex}, user in this index = ${myUsers[userIndex]}`);
-        
-        myUsers[userIndex].books.push(newBook);
-        await writeUserToJsonFile(myUsers[userIndex]);
+        console.log(`userIndex = ${userIndex}, user in this index = ${myUsers[userIndex].username}`);
+        const user: User = myUsers[userIndex];
+        user.books.push(newBook);
+        console.log(user);
+        await updateUserInJsonFile(user);
 
         const resultDetails = {
             bookDetails: `title: ${newBook.title}, author: ${newBook.author}`,
@@ -90,6 +87,6 @@ export async function createNewBook(title: string, userId: string) {
         return resultDetails; 
     }
     catch(error: any){
-        throw new Error("hefhjfbhcdhjhj" + error.message);
+        throw new Error("hefhjfbhcdhjhj " + error.message);
     }
 }

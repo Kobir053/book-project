@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { v4 as uuidv4 } from "uuid";
-import { readFromJsonFile, writeUserToJsonFile } from "../DAL/jsonUsers.js";
+import { readFromJsonFile, updateUserInJsonFile, writeUserToJsonFile } from "../DAL/jsonUsers.js";
 import bcrypt from "bcrypt";
 import { tryToGetBook } from "../otherAPI/requestForOtherAPI.js";
 export const registerUser = (username, password) => __awaiter(void 0, void 0, void 0, function* () {
@@ -52,9 +52,6 @@ export function ifUserIdExists(userId) {
 }
 export function createNewBook(title, userId) {
     return __awaiter(this, void 0, void 0, function* () {
-        // the details should be in the body not in the query...
-        // maybe middleware for that..
-        // maybe the service should get the whole book details and here to create it..
         try {
             const userIndex = yield ifUserIdExists(userId);
             if (userIndex < 0) {
@@ -70,9 +67,11 @@ export function createNewBook(title, userId) {
             if (!myUsers) {
                 throw new Error("there isn't any users at all");
             }
-            console.log(`userIndex = ${userIndex}, user in this index = ${myUsers[userIndex]}`);
-            myUsers[userIndex].books.push(newBook);
-            yield writeUserToJsonFile(myUsers[userIndex]);
+            console.log(`userIndex = ${userIndex}, user in this index = ${myUsers[userIndex].username}`);
+            const user = myUsers[userIndex];
+            user.books.push(newBook);
+            console.log(user);
+            yield updateUserInJsonFile(user);
             const resultDetails = {
                 bookDetails: `title: ${newBook.title}, author: ${newBook.author}`,
                 bookId: newBook.id
@@ -80,7 +79,7 @@ export function createNewBook(title, userId) {
             return resultDetails;
         }
         catch (error) {
-            throw new Error("hefhjfbhcdhjhj" + error.message);
+            throw new Error("hefhjfbhcdhjhj " + error.message);
         }
     });
 }
