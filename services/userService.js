@@ -38,7 +38,7 @@ export const authenticateUser = (username, password) => __awaiter(void 0, void 0
     if (!passwordMatch) {
         throw new Error("Invalid username or password.");
     }
-    return userFind.id ? userFind.id : ''; // just for typescript not to be mad
+    return userFind.id; // just for typescript not to be mad
 });
 export function ifUserIdExists(userId) {
     return __awaiter(this, void 0, void 0, function* () {

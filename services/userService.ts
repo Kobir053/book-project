@@ -42,7 +42,7 @@ export const authenticateUser = async (username: string, password: string): Prom
       throw new Error("Invalid username or password.");
     }
   
-    return userFind.id? userFind.id : ''; // just for typescript not to be mad
+    return userFind.id!; // just for typescript not to be mad
   };
 
 export async function ifUserIdExists (userId: string) : Promise<number> {
