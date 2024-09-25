@@ -81,6 +81,7 @@ export async function createNewBook(title: string, userId: string) {
         console.log(`userIndex = ${userIndex}, user in this index = ${myUsers[userIndex]}`);
         
         myUsers[userIndex].books.push(newBook);
+        await writeUserToJsonFile(myUsers[userIndex]);
 
         const resultDetails = {
             bookDetails: `title: ${newBook.title}, author: ${newBook.author}`,

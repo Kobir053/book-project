@@ -72,6 +72,7 @@ export function createNewBook(title, userId) {
             }
             console.log(`userIndex = ${userIndex}, user in this index = ${myUsers[userIndex]}`);
             myUsers[userIndex].books.push(newBook);
+            yield writeUserToJsonFile(myUsers[userIndex]);
             const resultDetails = {
                 bookDetails: `title: ${newBook.title}, author: ${newBook.author}`,
                 bookId: newBook.id
