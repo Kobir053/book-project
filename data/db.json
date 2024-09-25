@@ -28,5 +28,11 @@
         "username": "blabla",
         "password": "$2b$10$jDVRL6Tfiqu8bSFHY/R1YuFbO06ZkvyR/oGd.sI3025PrbKDbGu02",
         "books": []
+    },
+    {
+        "id": "9300a17e-6f61-473b-beb6-7d932c6ece6b",
+        "username": "moii",
+        "password": "$2b$10$FNjonnDRGwPPva2JPoqHAujvneqVTrdoj1BWz7Q3jlelhmtBfyY3O",
+        "books": []
     }
 ]

@@ -1,11 +1,15 @@
 import jsonfile from 'jsonfile';
 import { User } from '../models/types';
+import fs from 'fs';
 import dotenv from 'dotenv';
 
 dotenv.config();
 const DB_PATH: string = process.env.DB_PATH || './data/db.json';
 
 export function writeUserToJsonFile (user: User) : void {
+    if(!fs.readFileSync(DB_PATH)){
+        jsonfile.writeFileSync(DB_PATH, []);
+    }
     jsonfile.readFile(DB_PATH)
     .then((users) => {
         users.push(user);

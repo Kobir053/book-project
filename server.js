@@ -8,4 +8,6 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use('/', authRouter);
 app.use('/books', userRouter);
-app.listen(PORT, () => { console.log("server on"); });
+app.listen(PORT, () => {
+    console.log("server on");
+});

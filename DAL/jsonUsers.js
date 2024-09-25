@@ -8,10 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import jsonfile from 'jsonfile';
+import fs from 'fs';
 import dotenv from 'dotenv';
 dotenv.config();
 const DB_PATH = process.env.DB_PATH || './data/db.json';
 export function writeUserToJsonFile(user) {
+    if (!fs.readFileSync(DB_PATH)) {
+        jsonfile.writeFileSync(DB_PATH, []);
+    }
     jsonfile.readFile(DB_PATH)
         .then((users) => {
         users.push(user);
