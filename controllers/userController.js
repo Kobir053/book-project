@@ -7,26 +7,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import jsonfile from 'jsonfile';
-import dotenv from 'dotenv';
-dotenv.config();
-const DB_PATH = process.env.DB_PATH || './data/db.json';
-export function writeUserToJsonFile(user) {
-    jsonfile.readFile(DB_PATH)
-        .then((users) => {
-        users.push(user);
-        jsonfile.writeFile(DB_PATH, users, (err) => {
-            if (err)
-                throw new Error(err);
-        });
-    })
-        .catch((error) => {
-        throw new Error(error);
-    });
-}
-export function readFromJsonFile() {
+import { readFromJsonFile } from '../DAL/jsonUsers.js';
+export function getBooksOfUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const users = yield jsonfile.readFile(DB_PATH);
-        return users;
+        try {
+            const myUsers = yield readFromJsonFile();
+            if (!myUsers) {
+                res.status(500).json({ message: "there isn't any users at all" });
+                return;
+            }
+            const userID = req.query.userId;
+            const user = myUsers.find((u) => u.id === userID);
+            if (!user) {
+                res.status(404).json({ message: `could not found the user with id ${userID}` });
+                return;
+            }
+            res.status(200).json({ books: user.books });
+        }
+        catch (error) {
+            res.status(500).json({ message: error.message });
+        }
     });
 }
