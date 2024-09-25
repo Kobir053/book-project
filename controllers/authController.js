@@ -40,7 +40,10 @@ export function login(req, res) {
                 res.status(400).json({ error: "Username and password are required." });
                 return;
             }
-            const user = req.body;
+            const user = {
+                username: req.body.username,
+                password: req.body.password
+            };
             const userID = authenticateUser(user.username, user.password);
             res.status(200).json({ userId: userID });
         }

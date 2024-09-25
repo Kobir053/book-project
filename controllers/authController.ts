@@ -35,7 +35,10 @@ export async function login(req: Request,res: Response) {
             return;
         }
 
-        const user: UsernameAndPassword = req.body;
+        const user: UsernameAndPassword = {
+            username: req.body.username,
+            password: req.body.password
+        };
         const userID = authenticateUser(user.username, user.password);
         res.status(200).json({userId: userID});
     }
