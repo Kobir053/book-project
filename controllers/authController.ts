@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import {User, Book} from '../models/types.js';
+import {User, Book, UsernameAndPassword} from '../models/types.js';
 import { authenticateUser, registerUser } from "../services/userService.js";
 
 export async function register(req: Request,res: Response) {
@@ -9,7 +9,7 @@ export async function register(req: Request,res: Response) {
             return;
         }
 
-        const user: User = {
+        const user: UsernameAndPassword = {
             username: req.body.username,
             password: req.body.password
         };
@@ -35,7 +35,7 @@ export async function login(req: Request,res: Response) {
             return;
         }
 
-        const user: User = req.body;
+        const user: UsernameAndPassword = req.body;
         const userID = authenticateUser(user.username, user.password);
         res.status(200).json({userId: userID});
     }

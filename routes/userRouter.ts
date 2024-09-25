@@ -1,11 +1,13 @@
 import express, { Router } from 'express';
-import { ifPassedUserId } from '../middlewares/authMiddleware.js';
-import { getBooksOfUser } from '../controllers/userController.js';
+import { ifBodyContainsUserIdAndBookName, ifPassedUserId } from '../middlewares/authMiddleware.js';
+import { createBookForUser, getBooksOfUser } from '../controllers/userController.js';
 
 const router: Router = express.Router();
 
-router.use(ifPassedUserId);
+// router.use(ifPassedUserId);
 
-router.route('/').get(getBooksOfUser);
+router.route('/').get(ifPassedUserId,getBooksOfUser);
+
+router.route('/').post(ifBodyContainsUserIdAndBookName, createBookForUser);
 
 export default router;

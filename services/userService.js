@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { v4 as uuidv4 } from "uuid";
 import { readFromJsonFile, writeUserToJsonFile } from "../DAL/jsonUsers.js";
 import bcrypt from "bcrypt";
+import { tryToGetBook } from "../otherAPI/requestForOtherAPI.js";
 export const registerUser = (username, password) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield readFromJsonFile();
     const existingUser = users.find((u) => u.username === username);
@@ -20,9 +21,9 @@ export const registerUser = (username, password) => __awaiter(void 0, void 0, vo
     const newUserId = uuidv4();
     const newUser = {
         id: newUserId,
-        username,
+        username: username,
         password: hashedPassword,
-        books: [],
+        books: []
     };
     yield writeUserToJsonFile(newUser);
     return newUserId;
@@ -46,6 +47,39 @@ export function ifUserIdExists(userId) {
             throw new Error("there is not users in the DB");
         }
         const userIndex = myUsers.findIndex((user) => user.id === userId);
-        return userIndex >= 0 ? true : false;
+        return userIndex;
+    });
+}
+export function createNewBook(title, userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // the details should be in the body not in the query...
+        // maybe middleware for that..
+        // maybe the service should get the whole book details and here to create it..
+        try {
+            const userIndex = yield ifUserIdExists(userId);
+            if (userIndex < 0) {
+                throw new Error(`user with id ${userId} not founded`);
+            }
+            const searchBook = yield tryToGetBook(title);
+            const newBook = {
+                title: searchBook.title,
+                author: searchBook.author_name[0]
+            };
+            newBook.id = uuidv4();
+            const myUsers = yield readFromJsonFile();
+            if (!myUsers) {
+                throw new Error("there isn't any users at all");
+            }
+            console.log(`userIndex = ${userIndex}, user in this index = ${myUsers[userIndex]}`);
+            myUsers[userIndex].books.push(newBook);
+            const resultDetails = {
+                bookDetails: `title: ${newBook.title}, author: ${newBook.author}`,
+                bookId: newBook.id
+            };
+            return resultDetails;
+        }
+        catch (error) {
+            throw new Error("hefhjfbhcdhjhj" + error.message);
+        }
     });
 }

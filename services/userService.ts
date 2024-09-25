@@ -1,7 +1,8 @@
-import { User } from "../models/types";
+import { Book, User } from "../models/types";
 import { v4 as uuidv4 } from "uuid";
 import { readFromJsonFile, writeUserToJsonFile } from "../DAL/jsonUsers.js"
 import bcrypt from "bcrypt";
+import { tryToGetBook } from "../otherAPI/requestForOtherAPI.js";
 
 
 export const registerUser = async (username: string,password: string): Promise<string> => {
@@ -18,16 +19,16 @@ export const registerUser = async (username: string,password: string): Promise<s
     
     const newUser: User = {
       id: newUserId ,
-      username,
+      username: username,
       password: hashedPassword,
-      books: [],
+      books: []
     };
   
     await writeUserToJsonFile(newUser);
     return newUserId;
   };
   
-  export const authenticateUser = async (username: string, password: string): Promise<string> => {
+export const authenticateUser = async (username: string, password: string): Promise<string> => {
     const users: User[] = await readFromJsonFile();
     const userFind = users.find((u) => u.username === username);
   
@@ -44,11 +45,50 @@ export const registerUser = async (username: string,password: string): Promise<s
     return userFind.id? userFind.id : ''; // just for typescript not to be mad
   };
 
-  export async function ifUserIdExists (userId: string) : Promise<boolean> {
+export async function ifUserIdExists (userId: string) : Promise<number> {
     const myUsers = await readFromJsonFile();
     if(!myUsers){
         throw new Error("there is not users in the DB");
     }
     const userIndex = myUsers.findIndex((user) => user.id === userId);
-    return userIndex >= 0? true: false;
+    return userIndex;
   }
+
+export async function createNewBook(title: string, userId: string) {
+    // the details should be in the body not in the query...
+    // maybe middleware for that..
+    // maybe the service should get the whole book details and here to create it..
+
+    try{
+
+        const userIndex: number = await ifUserIdExists(userId);
+        if(userIndex < 0){
+            throw new Error(`user with id ${userId} not founded`);
+        }
+
+        const searchBook = await tryToGetBook(title);
+        
+        const newBook: Book = {
+            title: searchBook.title,
+            author: searchBook.author_name[0]
+        };
+        newBook.id = uuidv4();
+
+        const myUsers: User[] = await readFromJsonFile();
+        if(!myUsers){
+            throw new Error("there isn't any users at all");
+        }
+        console.log(`userIndex = ${userIndex}, user in this index = ${myUsers[userIndex]}`);
+        
+        myUsers[userIndex].books.push(newBook);
+
+        const resultDetails = {
+            bookDetails: `title: ${newBook.title}, author: ${newBook.author}`,
+            bookId: newBook.id
+        };
+        return resultDetails; 
+    }
+    catch(error: any){
+        throw new Error("hefhjfbhcdhjhj" + error.message);
+    }
+}

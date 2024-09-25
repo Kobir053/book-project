@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { readFromJsonFile } from '../DAL/jsonUsers.js';
+import { createNewBook } from '../services/userService.js';
 export function getBooksOfUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -23,6 +24,17 @@ export function getBooksOfUser(req, res) {
                 return;
             }
             res.status(200).json({ books: user.books });
+        }
+        catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    });
+}
+export function createBookForUser(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const detailsForResponse = yield createNewBook(req.body.bookName, req.body.userId);
+            res.status(201).json({ message: detailsForResponse });
         }
         catch (error) {
             res.status(500).json({ message: error.message });

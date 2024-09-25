@@ -16,5 +16,17 @@
         "password": "$2b$04$tuUuz8dzLmDH5Enps4hGHeBMKI5ol77pbA7440yPYVFCZ6wZNnvAq",
         "id": "431aa0af-f756-4afc-b7a8-5394895e261b",
         "books": []
+    },
+    {
+        "id": "93860956-fc9e-49d0-b5fd-7235cb02457a",
+        "username": "mooki",
+        "password": "$2b$10$BHTX6gd5.6mmVX938zNsd.g3LFya.44GJ89InaTA6pdDz025OfeHS",
+        "books": []
+    },
+    {
+        "id": "110e5cfd-4360-46f9-ba05-540f6f3cc730",
+        "username": "blabla",
+        "password": "$2b$10$jDVRL6Tfiqu8bSFHY/R1YuFbO06ZkvyR/oGd.sI3025PrbKDbGu02",
+        "books": []
     }
 ]

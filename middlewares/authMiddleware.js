@@ -6,8 +6,24 @@ export function ifPassedUserId(req, res, next) {
             return;
         }
         const userId = req.body.userId == null ? req.query.userId : req.body.userId;
-        if (!ifUserIdExists(userId)) {
+        if (+ifUserIdExists(userId) < 0) {
             res.status(404).json({ message: "user id not founded" });
+            return;
+        }
+        next();
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+export function ifBodyContainsUserIdAndBookName(req, res, next) {
+    try {
+        if (!req.body.userId) {
+            res.status(400).json({ message: "please enter a userId" });
+            return;
+        }
+        else if (!req.body.bookName) {
+            res.status(400).json({ message: "please enter a name for the book" });
             return;
         }
         next();

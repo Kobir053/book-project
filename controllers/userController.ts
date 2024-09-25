@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import {User, Book} from '../models/types.js';
 import { readFromJsonFile } from '../DAL/jsonUsers.js';
+import { createNewBook } from '../services/userService.js';
 
 export async function getBooksOfUser(req: Request, res: Response) {
     try {
@@ -21,5 +22,16 @@ export async function getBooksOfUser(req: Request, res: Response) {
     catch (error: any) {
         res.status(500).json({message: error.message});
     }
+}
 
+export async function createBookForUser (req: Request, res: Response) {
+    try {
+        
+        const detailsForResponse = await createNewBook(req.body.bookName, req.body.userId);
+        res.status(201).json({message: detailsForResponse});
+        
+    } 
+    catch (error: any) {
+        res.status(500).json({message: error.message});
+    }
 }
