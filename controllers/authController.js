@@ -7,39 +7,51 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { v4 as uuidv4 } from 'uuid';
-import { readFromJsonFile, writeUserToJsonFile } from "../DAL/jsonUsers.js";
-import bcrypt from 'bcrypt';
+import { authenticateUser, registerUser } from "../services/userService.js";
 export function register(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            if (!req.body.username || !req.body.password) {
+                res.status(400).json({ error: "Username and password are required." });
+                return;
+            }
             const user = {
                 username: req.body.username,
                 password: req.body.password
             };
-            user.id = uuidv4();
-            user.password = bcrypt.hashSync(user.password, 1);
-            user.books = [];
-            yield writeUserToJsonFile(user);
-            res.status(201).json({ userID: user.id });
+            const userID = yield registerUser(user.username, user.password);
+            res.status(201).json({ userID: userID });
         }
-        catch (err) {
-            res.status(500).send(err);
+        catch (error) {
+            if (error.message === "Username already exists.") {
+                res.status(409).json({ error: error.message });
+            }
+            else {
+                console.error("Error registering user:", error);
+                res.status(500).json({ error: "Internal server error." });
+            }
         }
     });
 }
 export function login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const user = req.body;
-            const users = yield readFromJsonFile();
-            const userIndex = users.findIndex((u) => u.username === user.username);
-            if (userIndex >= 0 && bcrypt.compareSync(user.password, users[userIndex].password)) {
-                res.status(200).json({ userID: users[userIndex].id });
+            if (!req.body.username || !req.body.password) {
+                res.status(400).json({ error: "Username and password are required." });
+                return;
             }
+            const user = req.body;
+            const userID = authenticateUser(user.username, user.password);
+            res.status(200).json({ userId: userID });
         }
-        catch (err) {
-            res.status(500).json({ message: err.message + "wrong" });
+        catch (error) {
+            if (error.message === "Invalid username or password.") {
+                res.status(401).json({ error: error.message });
+            }
+            else {
+                console.error("Error during login:", error);
+                res.status(500).json({ error: "Internal server error." });
+            }
         }
     });
 }
