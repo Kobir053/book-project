@@ -39,3 +39,13 @@ export const authenticateUser = (username, password) => __awaiter(void 0, void 0
     }
     return userFind.id ? userFind.id : ''; // just for typescript not to be mad
 });
+export function ifUserIdExists(userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const myUsers = yield readFromJsonFile();
+        if (!myUsers) {
+            throw new Error("there is not users in the DB");
+        }
+        const userIndex = myUsers.findIndex((user) => user.id === userId);
+        return userIndex >= 0 ? true : false;
+    });
+}

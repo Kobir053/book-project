@@ -2,7 +2,7 @@ import express, { Application } from 'express';
 import authRouter from './routes/auth.js';
 
 const app: Application = express();
-const PORT: number = 3000;
+const PORT: number | string = process.env.PORT || 3000;
 
 app.use(express.json());
 

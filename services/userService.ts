@@ -43,3 +43,12 @@ export const registerUser = async (username: string,password: string): Promise<s
   
     return userFind.id? userFind.id : ''; // just for typescript not to be mad
   };
+
+  export async function ifUserIdExists (userId: string) : Promise<boolean> {
+    const myUsers = await readFromJsonFile();
+    if(!myUsers){
+        throw new Error("there is not users in the DB");
+    }
+    const userIndex = myUsers.findIndex((user) => user.id === userId);
+    return userIndex >= 0? true: false;
+  }
